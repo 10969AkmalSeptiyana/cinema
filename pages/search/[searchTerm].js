@@ -4,6 +4,7 @@ import Router from "next/router";
 
 import Layout from "../../components/layout";
 import MovieLists from "../../components/movieLists";
+import { getRequest } from "../../lib/axios";
 
 export default function Search({ search }) {
   const { searchTerm } = Router.query;
@@ -23,18 +24,16 @@ export default function Search({ search }) {
 }
 
 export async function getServerSideProps(context) {
-  const { searchTerm } = context.params;
+  try {
+    const { searchTerm } = context.params;
 
-  const search = (
-    await axios({
-      method: "GET",
-      url: `${process.env.BASE_URL}/search/multi`,
-      params: { api_key: process.env.API_KEY, query: searchTerm },
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    })
-  ).data;
+    const search = (await getRequest("/search/multi", { query: searchTerm }))
+      .data;
 
-  return {
-    props: { search },
-  };
+    return {
+      props: { search },
+    };
+  } catch (error) {
+    console.log(error);
+  }
 }

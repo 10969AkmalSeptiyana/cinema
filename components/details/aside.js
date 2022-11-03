@@ -13,7 +13,7 @@ import MovieOptions from "../../components/movieOptions";
 import CardInfo from "../../components/cardInfo";
 
 export default function MovieDetailsAside({
-  movieDetails,
+  details,
   popular,
   topTv,
   upcoming,
@@ -28,9 +28,9 @@ export default function MovieDetailsAside({
           <StarIcon className="w-7 h-7 text-yellow-500" />
           <p className="text-xl text-[#666666] font-medium">
             <span className="text-2xl text-[#e8e8e8]">
-              {movieDetails.vote_average.toFixed(1)}
+              {details.vote_average.toFixed(1)}
             </span>{" "}
-            | {movieDetails.vote_count}
+            | {details.vote_count}
           </p>
         </div>
       </div>

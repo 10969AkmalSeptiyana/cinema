@@ -5,9 +5,11 @@ import Head from "next/head";
 
 import Layout from "../components/layout";
 import MovieLists from "../components/movieLists";
+import { getRequest } from "../lib/axios";
 
-export default function Movies({ movies, genres }) {
+export default function Movies({ movies, genres, test }) {
   const [genre, setGenre] = useState([]);
+  console.log(test);
 
   useEffect(() => {
     Router.replace(`/movies?genre=${genre.join(",")}`);
@@ -38,27 +40,17 @@ export default function Movies({ movies, genres }) {
 }
 
 export async function getServerSideProps(context) {
-  const { genre } = context.query;
+  try {
+    const { genre } = context.query;
 
-  const options = {
-    method: "GET",
-    url: `${process.env.BASE_URL}/discover/movie`,
-    params: { api_key: process.env.API_KEY, with_genres: genre },
-    headers: { "Content-Type": "application/json;charset=utf-8" },
-  };
+    const movies = (await getRequest("/discover/movie", { with_genres: genre }))
+      .data;
+    const genres = (await getRequest("/genre/movie/list")).data;
 
-  const movies = (await axios.request(options)).data;
-
-  const genres = (
-    await axios({
-      method: "GET",
-      url: `${process.env.BASE_URL}/genre/movie/list`,
-      params: { api_key: process.env.API_KEY },
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    })
-  ).data;
-
-  return {
-    props: { movies, genres },
-  };
+    return {
+      props: { movies, genres },
+    };
+  } catch (error) {
+    console.log(error);
+  }
 }

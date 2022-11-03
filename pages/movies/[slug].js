@@ -3,6 +3,7 @@ import axios from "axios";
 
 import Layout from "../../components/layout";
 import MovieLists from "../../components/movieLists";
+import { getRequest } from "../../lib/axios";
 
 export default function Movies({ movies }) {
   return (
@@ -20,21 +21,20 @@ export default function Movies({ movies }) {
 }
 
 export async function getServerSideProps(context) {
-  const { slug } = context.params;
+  try {
+    const { slug } = context.params;
 
-  const options = {
-    method: "GET",
-    url:
+    const url =
       slug !== "trending"
         ? `${process.env.BASE_URL}/movie/${slug}`
-        : `${process.env.BASE_URL}/trending/movie/week`,
-    params: { api_key: process.env.API_KEY },
-    headers: { "Content-Type": "application/json;charset=utf-8" },
-  };
+        : `${process.env.BASE_URL}/trending/movie/week`;
 
-  const movies = (await axios.request(options)).data;
+    const movies = (await getRequest(url)).data;
 
-  return {
-    props: { movies },
-  };
+    return {
+      props: { movies },
+    };
+  } catch (error) {
+    console.log(error);
+  }
 }

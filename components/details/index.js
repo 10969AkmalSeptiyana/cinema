@@ -4,33 +4,31 @@ import { useRouter } from "next/router";
 import MovieLists from "../../components/movieLists";
 import { convertToHour } from "../../lib/convert";
 
-export default function MovieDetails({ movieDetails, credits, similar }) {
+export default function MovieDetails({ details, credits, similar }) {
   const { media } = useRouter().query;
   const { cast, crew } = credits;
-  const { hours, minutes } = convertToHour(movieDetails.runtime);
+  const { hours, minutes } = convertToHour(details.runtime);
 
   return (
     <main>
       <article className="flex-1">
         <ul className="flex flex-wrap items-center gap-y-4">
           <li className="text-2xl text-[#e8e8e8] font-medium after:content-['•'] after:text-[#e8e8e8] after:mx-2 md:after:mx-4">
-            {media === "movie" ? movieDetails.title : movieDetails.name}
+            {media === "movie" ? details.title : details.name}
           </li>
           <li className="text-2xl text-[#e8e8e8] font-medium after:content-['•'] after:text-[#e8e8e8] after:mx-2 md:after:mx-4">
-            {media === "movie"
-              ? movieDetails.release_date
-              : movieDetails.first_air_date}
+            {media === "movie" ? details.release_date : details.first_air_date}
           </li>
           <li className="text-2xl text-[#e8e8e8] font-medium mr-4">
             {media === "movie"
               ? `${hours}h ${minutes}m`
-              : `${movieDetails.number_of_episodes} episode${
-                  movieDetails.number_of_episodes > 1 && "s"
+              : `${details.number_of_episodes} episode${
+                  details.number_of_episodes > 1 && "s"
                 }`}
           </li>
           <li>
             <div className="flex items-center gap-x-3">
-              {movieDetails.genres.map((genre) => {
+              {details.genres.map((genre) => {
                 return (
                   <button
                     key={genre.id}
@@ -45,7 +43,7 @@ export default function MovieDetails({ movieDetails, credits, similar }) {
         </ul>
 
         <p className="max-w-[774px] text-xl text-[#e8e8e8] font-medium my-6">
-          {movieDetails.overview}
+          {details.overview}
         </p>
 
         <ul className="mb-9">
