@@ -48,11 +48,7 @@ export default function Tv({ genres }) {
       </Head>
       <Layout genres={genres} getGenres={getGenres} setGenre={setGenre}>
         <main className="px-9 flex flex-col gap-y-8 max-w-[1024px]">
-          {loading ? (
-            <SkeletonCard length={20} />
-          ) : (
-            <MovieLists data={withGenre} full mediaPath="tv" />
-          )}
+          <MovieLists data={withGenre} full mediaPath="tv" />
         </main>
       </Layout>
     </>
