@@ -1,17 +1,30 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
 import Head from "next/head";
-import Router from "next/router";
+import { useEffect, useState } from "react";
 
 import Layout from "../components/layout";
 import MovieLists from "../components/movieLists";
+import MoviesScreen from "../components/skeleton/moviesScreen";
 import { getRequest } from "../lib/axios";
 
-export default function Tv({ tv, genres }) {
+export default function Tv({ genres }) {
   const [genre, setGenre] = useState([]);
+  const [withGenre, setWithGenre] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Router.replace(`/tv?genre=${genre.join(",")}`);
+    if (genres) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+
+    (async () => {
+      const data = (
+        await getRequest("/discover/tv", { with_genres: genre.join(",") })
+      ).data;
+
+      setWithGenre(data);
+    })();
   }, [genre]);
 
   function getGenres(e) {
@@ -24,29 +37,34 @@ export default function Tv({ tv, genres }) {
     }
   }
 
+  if (loading) {
+    return <MoviesScreen />;
+  }
+
   return (
     <>
       <Head>
         <title>Tv</title>
       </Head>
-      <Layout genres={genres} getGenres={getGenres}>
+      <Layout genres={genres} getGenres={getGenres} setGenre={setGenre}>
         <main className="px-9 flex flex-col gap-y-8 max-w-[1024px]">
-          <MovieLists data={tv} full mediaPath="tv" />
+          {loading ? (
+            <SkeletonCard length={20} />
+          ) : (
+            <MovieLists data={withGenre} full mediaPath="tv" />
+          )}
         </main>
       </Layout>
     </>
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
   try {
-    const { genre } = context.query;
-
-    const tv = (await getRequest("/discover/tv", { with_genres: genre })).data;
-    const genres = (await getRequest("/genre/movie/list")).data;
+    const genres = (await getRequest("/genre/tv/list")).data;
 
     return {
-      props: { tv, genres },
+      props: { genres },
     };
   } catch (error) {
     console.log(error);

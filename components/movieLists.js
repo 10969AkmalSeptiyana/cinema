@@ -14,7 +14,7 @@ export default function MovieLists({ title, data, full, mediaPath, href }) {
           </h2>
         )}
         {href && (
-          <Link href={href}>
+          <Link href={href} passHref>
             <a className="text-base text-[#666666] font-semibold">See all</a>
           </Link>
         )}

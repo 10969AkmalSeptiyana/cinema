@@ -1,11 +1,28 @@
 import Head from "next/head";
-import axios from "axios";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 import Layout from "../../components/layout";
 import MovieLists from "../../components/movieLists";
+import SeeAllScreen from "../../components/skeleton/seeAllScreen";
 import { getRequest } from "../../lib/axios";
 
 export default function Movies({ movies }) {
+  const [loading, setLoading] = useState(true);
+  const { slug } = useRouter().query;
+
+  useEffect(() => {
+    if (movies) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+  }, [movies]);
+
+  if (loading) {
+    return <SeeAllScreen />;
+  }
+
   return (
     <>
       <Head>
@@ -13,7 +30,13 @@ export default function Movies({ movies }) {
       </Head>
       <Layout>
         <main className="px-9 flex flex-col gap-y-8 max-w-[1024px]">
-          <MovieLists data={movies} full />
+          <MovieLists
+            data={movies}
+            full
+            mediaPath={
+              slug === "upcoming" || slug === "popular" ? "movie" : null
+            }
+          />
         </main>
       </Layout>
     </>

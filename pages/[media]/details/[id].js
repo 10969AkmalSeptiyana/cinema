@@ -1,11 +1,10 @@
 import Head from "next/head";
-import axios from "axios";
 import Image from "next/image";
 
-import Layout from "../../../components/layout";
-import MovieLists from "../../../components/movieLists";
 import MovieDetails from "../../../components/details";
 import MovieDetailsAside from "../../../components/details/aside";
+import Layout from "../../../components/layout";
+import MovieLists from "../../../components/movieLists";
 import { getRequest } from "../../../lib/axios";
 
 export default function Details({
@@ -32,7 +31,7 @@ export default function Details({
           />
         </figure>
 
-        <div className="flex flex-wrap lg:flex-nowrap px-4 md:px-9 gap-5">
+        <div className="flex flex-wrap lg:flex-nowrap px-4 md:px-9 gap-5 xl:max-w-[1400px]">
           <MovieDetails details={details} credits={credits} similar={similar} />
 
           <MovieDetailsAside
@@ -56,7 +55,7 @@ export async function getServerSideProps(context) {
     const { media, id } = context.params;
 
     const details = (await getRequest(`/${media}/${id}`)).data;
-    const similar = (await getRequest(`/movie/${id}/similar`)).data;
+    const similar = (await getRequest(`/${media}/${id}/similar`)).data;
     const credits = (await getRequest(`/${media}/${id}/credits`)).data;
     const popular = (await getRequest("/movie/popular")).data;
     const topTv = (await getRequest("/tv/top_rated")).data;

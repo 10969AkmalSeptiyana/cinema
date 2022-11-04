@@ -1,12 +1,27 @@
-import axios from "axios";
 import Head from "next/head";
+import { useState, useEffect } from "react";
 
 import Jumbotron from "../components/jumbotron";
 import Layout from "../components/layout";
 import MovieLists from "../components/movieLists";
 import { getRequest } from "../lib/axios";
+import HomeScreen from "../components/skeleton/homeScreen";
 
 export default function Home({ trending, upcoming, tv, popularMovie }) {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (trending && upcoming && tv && popularMovie) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+  }, [trending, upcoming, tv, popularMovie]);
+
+  if (loading) {
+    return <HomeScreen />;
+  }
+
   return (
     <>
       <Head>
@@ -15,6 +30,7 @@ export default function Home({ trending, upcoming, tv, popularMovie }) {
       <Layout>
         <main className="px-9 flex flex-col gap-y-8">
           <Jumbotron />
+
           <MovieLists
             title="Trending"
             data={trending}

@@ -29,7 +29,7 @@ export default function MovieCard({
         </div>
       )}
 
-      <Link href={`${media ? media : mediaPath}/details/${id}`}>
+      <Link href={`/${media ? media : mediaPath}/details/${id}`}>
         <a className="absolute inset-0"></a>
       </Link>
     </div>

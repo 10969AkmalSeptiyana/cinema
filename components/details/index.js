@@ -49,37 +49,43 @@ export default function MovieDetails({ details, credits, similar }) {
         <ul className="mb-9">
           <li className="text-xl text-[#e8e8e8] font-normal border-y border-[#e8e8e8]/[.25] py-4">
             Director :{" "}
-            {crew
-              ?.filter((item) => item.job === "Director")
-              ?.map((item) => {
-                return (
-                  <span key={item.id} className="text-[#EB1C24]">
-                    {item.name}
-                  </span>
-                );
-              })}
+            {crew.find((item) => item.job === "Director")
+              ? crew
+                  ?.filter((item) => item.job === "Director")
+                  ?.map((item) => {
+                    return (
+                      <span key={item.id} className="text-[#EB1C24]">
+                        {item.name}
+                      </span>
+                    );
+                  })
+              : "Empty"}
           </li>
           <li className="text-xl text-[#e8e8e8] font-normal border-y border-[#e8e8e8]/[.25] py-4">
             Writers :{" "}
-            {crew
-              ?.filter((item) => item.department === "Writing")
-              ?.map((item) => {
-                return (
-                  <span key={item.id} className="text-[#EB1C24]">
-                    {item.name},{" "}
-                  </span>
-                );
-              })}
+            {crew.find((item) => item.job === "Writing")
+              ? crew
+                  ?.filter((item) => item.department === "Writing")
+                  ?.map((item) => {
+                    return (
+                      <span key={item.id} className="text-[#EB1C24]">
+                        {item.name},{" "}
+                      </span>
+                    );
+                  })
+              : "Empty"}
           </li>
           <li className="text-xl text-[#e8e8e8] font-normal border-y border-[#e8e8e8]/[.25] py-4">
             Stars :{" "}
-            {cast?.slice(0, 3)?.map((item) => {
-              return (
-                <span key={item.id} className="text-[#EB1C24]">
-                  {item.name},{" "}
-                </span>
-              );
-            })}
+            {crew.length > 0
+              ? cast?.slice(0, 3)?.map((item) => {
+                  return (
+                    <span key={item.id} className="text-[#EB1C24]">
+                      {item.name},{" "}
+                    </span>
+                  );
+                })
+              : "Empty"}
           </li>
         </ul>
 
@@ -110,7 +116,10 @@ export default function MovieDetails({ details, credits, similar }) {
         </div>
 
         <div className="hidden md:block">
-          <MovieLists title="Similar Movies" data={similar} />
+          <MovieLists
+            title={`Similar ${media === "movie" ? "Movies" : "TV"}`}
+            data={similar}
+          />
         </div>
       </article>
     </main>

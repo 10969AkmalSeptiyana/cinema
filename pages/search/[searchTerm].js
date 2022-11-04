@@ -1,13 +1,27 @@
-import axios from "axios";
 import Head from "next/head";
-import Router from "next/router";
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 
 import Layout from "../../components/layout";
 import MovieLists from "../../components/movieLists";
+import SearchScreen from "../../components/skeleton/searchScreen";
 import { getRequest } from "../../lib/axios";
 
 export default function Search({ search }) {
-  const { searchTerm } = Router.query;
+  const [loading, setLoading] = useState(true);
+  const { searchTerm } = useRouter().query;
+
+  useEffect(() => {
+    if (search) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+  }, [search]);
+
+  if (loading) {
+    return <SearchScreen />;
+  }
 
   return (
     <>
